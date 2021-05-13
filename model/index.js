@@ -1,60 +1,33 @@
-const fs = require('fs/promises')
-const path = require('path')
-// const contacts = require('./contacts.json')
-const contactsPath = path.join(__dirname, 'contacts.json')
+const Contact = require('./schemas/contact')
 
 const listContacts = async () => {
-  try {
-    const data = await fs.readFile(contactsPath, 'utf-8')
-    return JSON.parse(data)
-  } catch (err) {
-    console.log(err)
-  }
+  const result = await Contact.find({})
+  return result
 }
 
 const getContactById = async (contactId) => {
-  try {
-    const contacts = await listContacts()
-    return contacts.find(({ id }) => id === Number(contactId))
-  } catch (err) {
-    console.log(err)
-  }
+  const result = await Contact.findById(contactId)
+  return result
 }
 
 const removeContact = async (contactId) => {
-  try {
-    const contacts = await listContacts()
-    const filteredContacts = await contacts.filter(({ id }) => id !== Number(contactId))
-    await fs.writeFile(contactsPath, JSON.stringify(filteredContacts))
-    return filteredContacts
-  } catch (err) {
-    console.log(err)
-  }
+  const result = await Contact.findByIdAndRemove(contactId)
+  return result
 }
 
 const addContact = async (body) => {
-  try {
-    const contacts = await listContacts()
-    const contact = { id: Date.now(), ...body }
-    const changedContacts = [contact, ...contacts]
-    await fs.writeFile(contactsPath, JSON.stringify(changedContacts))
-    return contact
-  } catch (err) {
-    console.log(err)
-  }
+  const result = await Contact.create(body)
+  return result
 }
 
 const updateContact = async (contactId, body) => {
-  try {
-    const contacts = await listContacts()
-    const updatedContacts = await contacts.map((item) => item.id === Number(contactId) ? { ...item, ...body } : item)
+  const result = await Contact.findByIdAndUpdate(contactId, { ...body }, { new: true })
+  return result
+}
 
-    await fs.writeFile(contactsPath, JSON.stringify(updatedContacts))
-
-    return updatedContacts.find(({ id }) => id === Number(contactId))
-  } catch (err) {
-    console.log(err)
-  }
+const updateStatusContact = async (contactId, body) => {
+  const result = await Contact.findByIdAndUpdate(contactId, { ...body }, { new: true })
+  return result
 }
 
 module.exports = {
@@ -63,4 +36,5 @@ module.exports = {
   removeContact,
   addContact,
   updateContact,
+  updateStatusContact,
 }
