@@ -34,6 +34,7 @@ const validate = (schema, body, next) => {
   }
   next()
 }
+module.exports = validate
 
 module.exports.validateCreateContact = (req, _res, next) => {
   return validate(schemaCreateContact, req.body, next)

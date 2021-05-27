@@ -13,8 +13,9 @@ const create = async (options) => {
   return await user.save()
 }
 
-const update = async (id, token) => {
-  return await User.updateOne({ _id: id }, { token })
+const update = async (id, body) => {
+  const result = await User.findByIdAndUpdate({ _id: id }, { ...body }, { new: true })
+  return result
 }
 
 module.exports = { findById, findByEmail, create, update }

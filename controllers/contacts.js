@@ -4,7 +4,6 @@ const {
   addContact,
   removeContact,
   updateContact,
-  updateStatusContact
 } = require('../model/contacts')
 const { HTTP_CODE } = require('../helpers/constants')
 
@@ -108,27 +107,4 @@ const update = async (req, res, next) => {
   }
 }
 
-const updateStatus = async (req, res, next) => {
-  try {
-    const userId = req.user.id
-    const contact = await updateStatusContact(userId, req.params.contactId, req.body)
-    if (contact) {
-      return res.status(HTTP_CODE.OK).json({
-        status: 'success',
-        code: HTTP_CODE.OK,
-        data: {
-          contact
-        }
-      })
-    }
-    return next({
-      status: HTTP_CODE.NOT_FOUND,
-      message: 'Not Found',
-      data: 'Not Found',
-    })
-  } catch (e) {
-    next(e)
-  }
-}
-
-module.exports = { getAll, getById, create, remove, update, updateStatus }
+module.exports = { getAll, getById, create, remove, update }

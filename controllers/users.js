@@ -73,8 +73,23 @@ const getCurrentUser = async (req, res, next) => {
   }
 }
 
-const updateSubscription = async (req, res, next) => {}
+const update = async (req, res, next) => {
+  try {
+    const userId = req.user.id
+    const { email, subscription } = await Users.update(userId, req.body)
+
+    return res.status(HTTP_CODE.OK).json({
+      status: 'success',
+      code: HTTP_CODE.OK,
+      data: {
+        email, subscription
+      }
+    })
+  } catch (e) {
+    next(e)
+  }
+}
 
 module.exports = {
-  signup, login, logout, getCurrentUser, updateSubscription
+  signup, login, logout, getCurrentUser, update
 }
