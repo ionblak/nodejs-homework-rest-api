@@ -1,6 +1,6 @@
 const Joi = require('joi')
 Joi.objectId = require('joi-objectid')(Joi)
-const { HTTP_CODE } = require('../helpers/constants')
+const { HTTP_CODE } = require('../../../helpers/constants')
 
 const schemaCreateContact = Joi.object({
   name: Joi.string().alphanum().min(2).max(30).required(),
@@ -34,6 +34,7 @@ const validate = (schema, body, next) => {
   }
   next()
 }
+module.exports = validate
 
 module.exports.validateCreateContact = (req, _res, next) => {
   return validate(schemaCreateContact, req.body, next)
