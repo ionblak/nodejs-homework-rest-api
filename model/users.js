@@ -13,8 +13,8 @@ const create = async (options) => {
   return await user.save()
 }
 
-const update = async (id, body) => {
-  const result = await User.findByIdAndUpdate({ _id: id }, { ...body }, { new: true })
+const update = async (id, token) => {
+  const result = await User.findByIdAndUpdate({ _id: id }, { token }, { new: true })
   return result
 }
 
