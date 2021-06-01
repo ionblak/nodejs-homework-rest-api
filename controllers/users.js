@@ -70,7 +70,7 @@ const logout = async (req, res, next) => {
   }
 }
 
-const getCurrentUser = async (req, res, next) => {
+const getUser = async (req, res, next) => {
   try {
     const userId = req.user.id
     const { email, subscription } = await Users.findById(userId)
@@ -120,5 +120,5 @@ const avatars = async (req, res, next) => {
 }
 
 module.exports = {
-  signup, login, logout, getCurrentUser, update, avatars
+  signup, login, logout, getUser, update, avatars
 }

@@ -11,7 +11,7 @@ router.post('/login', validateUser, ctrl.login)
 
 router.post('/logout', guard, ctrl.logout)
 
-router.get('/current', guard, ctrl.getCurrentUser)
+router.get('/current', guard, ctrl.getUser)
 
 router.patch('/', guard, validateUpdateUser, ctrl.update)
 
