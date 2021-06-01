@@ -1,9 +1,20 @@
 const jwt = require('jsonwebtoken')
+const cloudinary = require('cloudinary').v2
+const { promisify } = require('util')
+
 require('dotenv').config()
+
 const Users = require('../model/users')
 const { HTTP_CODE } = require('../helpers/constants')
+const Upload = require('../services/upload-avatars-cloud')
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+})
 
 const signup = async (req, res, next) => {
   try {
@@ -89,7 +100,25 @@ const update = async (req, res, next) => {
     next(e)
   }
 }
+const avatars = async (req, res, next) => {
+  try {
+    const userId = req.user.id
+    const uploadCloud = promisify(cloudinary.uploader.upload)
+    const uploads = new Upload(uploadCloud)
+
+    const { userIdImg, avatarUrl } = await uploads.saveAvatarToCloud(req.file.path, req.user.userIdImg)
+    await Users.updateAvatar(userId, avatarUrl, userIdImg)
+
+    return res.status(HTTP_CODE.OK).json({
+      status: 'success',
+      code: HTTP_CODE.OK,
+      data: { avatarUrl }
+    })
+  } catch (e) {
+    next(e)
+  }
+}
 
 module.exports = {
-  signup, login, logout, getCurrentUser, update
+  signup, login, logout, getCurrentUser, update, avatars
 }
