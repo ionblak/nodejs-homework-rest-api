@@ -33,6 +33,14 @@ const updateAvatar = async (id, avatar, userIdImg = null) => {
   return await User.updateOne({ _id: id }, { avatar, userIdImg });
 };
 
+const findUserByVerifyToken = async (token) => {
+  return await User.findOne({ verifyToken: token });
+};
+
+const updateVerifyToken = async (id, verify, verifyToken) => {
+  return await User.updateOne({ _id: id }, { verify, verifyToken });
+};
+
 module.exports = {
   findById,
   findByEmail,
@@ -40,4 +48,6 @@ module.exports = {
   update,
   updateToken,
   updateAvatar,
+  findUserByVerifyToken,
+  updateVerifyToken,
 };
