@@ -1,29 +1,33 @@
-const passport = require('passport')
-const { Strategy, ExtractJwt } = require('passport-jwt')
-require('dotenv').config()
-const Users = require('../model/users')
+const passport = require("passport");
+const { Strategy, ExtractJwt } = require("passport-jwt");
+require("dotenv").config();
+const Users = require("../model/users");
 
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: JWT_SECRET_KEY
-}
+  secretOrKey: JWT_SECRET_KEY,
+};
 
 passport.use(
   new Strategy(opts, async (payload, done) => {
     try {
-      const user = await Users.findById(payload.id)
+      const user = await Users.findById(payload.id);
       if (!user) {
-        return done(new Error('user not found'), false)
+        return done(new Error("user not found"), false);
       }
 
       if (!user.token) {
-        return done(null, false)
+        return done(null, false);
+      }
+      if (!user.verify) {
+        return done(null, false);
       }
 
-      return done(null, user)
+      return done(null, user);
     } catch (err) {
-      return done(err, false)
+      return done(err, false);
     }
-  }))
+  })
+);
